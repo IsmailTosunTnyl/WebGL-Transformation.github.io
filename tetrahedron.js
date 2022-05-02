@@ -112,8 +112,37 @@ window.onload = function init() {
         //render again
         requestAnimFrame(render);
     });	
-   
+
+
+    // additional feature
+    // rotate tetrahedron using mouse movement
+    var pressedMouse = false;
+    canvas.style.cursor="move";
+    canvas.addEventListener("mousedown", function(e){
+        
+        let x = e.clientX;
+        let y = e.clientY;
+        pressedMouse = true;
+        
+        canvas.onmousemove = function(e) {
+            
+            if(pressedMouse == true){
+                
+                rotationArray[1] = x-e.clientX;
+                rotationArray[0] = y-e.clientY;
+                requestAnimFrame(render);
+            }
+         }
+    });
+
+    canvas.addEventListener("mouseup", function(e){
+        pressedMouse = false;
+        
+    });
+
+
     render();
+   
 }
 
 
@@ -132,6 +161,7 @@ var render = function(){
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.drawArrays( gl.TRIANGLES, 0, points.length );
     //requestAnimFrame(render);
+    
 }
 
 
@@ -144,7 +174,7 @@ function triangle( a, b, c, color )
         vec3(1.0, 0.0, 0.0),
         vec3(0.0, 1.0, 0.0),
         vec3(0.0, 0.0, 1.0),
-        vec3(0.0, 0.0, 0.0)
+        vec3(0.0, 1.0, 1.0)
     ];
 
     colors.push( baseColors[color] );
