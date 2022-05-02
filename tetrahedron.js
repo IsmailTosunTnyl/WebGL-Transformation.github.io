@@ -8,7 +8,7 @@ var translationArray=[0,0,0,0];
 var rotationArray=[0,0,0];
 var scaleArray=[1,1]
 
-//TODO: Define global variables if needed
+
 
 window.onload = function init() {
     canvas = document.getElementById( "gl-canvas" );
@@ -34,8 +34,9 @@ window.onload = function init() {
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );    
 
-    //TODO: generate tetrahedron geometry and send vertices and colors to GPU
+    //Create triangels for tetrahedron
     tetra(vertices[0], vertices[1], vertices[2], vertices[3])
+
     mvLoc = gl.getUniformLocation(program, "modelviewmatrix"); 
     translation = gl.getUniformLocation(program, "translation"); 
     var cBuffer = gl.createBuffer();
@@ -59,68 +60,73 @@ window.onload = function init() {
 
 
 	document.getElementById("rotX").oninput = function(event) {
-        //TODO:handle input here
+        //Rotate on X axis
         rotationArray[0] = this.value;
         requestAnimFrame(render)
     };
 	
     document.getElementById("rotY").oninput = function(event) {
-        //TODO:handle input here
+        //Rotate on Y axis
         rotationArray[1] = this.value;
         requestAnimFrame(render)
     };
 
     document.getElementById("objRotationZSlider").oninput = function(event) {
-        //TODO:handle input here
+        //Rotate on Z axis
         rotationArray[2] = this.value;
         requestAnimFrame(render)
     };
    
     document.getElementById("posX").oninput = function(event) {
-        //TODO:handle input here
+        //Move on X axis
         translationArray[0] = this.value;
         requestAnimFrame(render);
     };
 	
     document.getElementById("posY").oninput = function(event) {
-        //TODO:handle input here
+        //Move on Y axis
         translationArray[1] = this.value;
         requestAnimFrame(render);
     };
 	
 	document.getElementById("scaleX").oninput = function(event) {
-        //TODO:handle input here
+       //Scale on X axis
         scaleArray[0] = this.value;
         requestAnimFrame(render);
     };
 	
     document.getElementById("scaleY").oninput = function(event) {
-        //TODO:handle input here
+        //Scale on Y axis
         scaleArray[1] = this.value;
         requestAnimFrame(render);
     };
 	   
 	document.getElementById("ResetButton").addEventListener("click", function(){
-		//TODO:handle input here,
+		//reset transformations data
         translationArray=[0,0,0,0];
         rotationArray=[0,0,0];
         scaleArray=[1,1]
+        //reset sliders
+        var el = document.querySelectorAll(".slider")
+        el.forEach(i => i.value = 0)
+        //render again
         requestAnimFrame(render);
     });	
    
     render();
 }
 
-//TODO:modify this function to render the shape and apply transformations
+
 var render = function(){
+    // create transformations matrix
     var modelviewmatrix = mat4();
 	
     modelviewmatrix = mult(modelviewmatrix,rotate(rotationArray[2],0,0,1))
     modelviewmatrix = mult(modelviewmatrix,rotate(rotationArray[1],0,1,0))
     modelviewmatrix = mult(modelviewmatrix,rotate(rotationArray[0],1,0,0))
 
-    modelviewmatrix = mult(modelviewmatrix,scalem(scaleArray[0],scaleArray[1],0))
-
+    modelviewmatrix = mult(modelviewmatrix,scalem(scaleArray[0],scaleArray[1],1))
+    
     gl.uniform4fv(translation,translationArray)
     gl.uniformMatrix4fv( mvLoc, false, flatten(modelviewmatrix) );
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
