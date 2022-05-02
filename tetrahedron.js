@@ -3,10 +3,9 @@ var gl;
 var points = [];
 var colors = [];
 var mvLoc;
-var translation;
-var translationArray=[0,0,0,0];
+var translationArray=[0,0,0];
 var rotationArray=[0,0,0];
-var scaleArray=[1,1]
+var scaleArray=[0.8,0.8,0.8]
 
 
 
@@ -38,7 +37,7 @@ window.onload = function init() {
     tetra(vertices[0], vertices[1], vertices[2], vertices[3])
 
     mvLoc = gl.getUniformLocation(program, "modelviewmatrix"); 
-    translation = gl.getUniformLocation(program, "translation"); 
+   
     var cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
@@ -103,18 +102,31 @@ window.onload = function init() {
 	   
 	document.getElementById("ResetButton").addEventListener("click", function(){
 		//reset transformations data
-        translationArray=[0,0,0,0];
+        translationArray=[0,0,0];
         rotationArray=[0,0,0];
-        scaleArray=[1,1]
+        scaleArray=[0.8,0.8,0.8]
         //reset sliders
         var el = document.querySelectorAll(".slider")
         el.forEach(i => i.value = 0)
         //render again
+        document.getElementById("scaleAll").value=0.8
         requestAnimFrame(render);
     });	
 
 
-    // additional feature
+    // additional features
+
+    //change object size
+    document.getElementById("scaleAll").oninput = function(event) {
+        //Scale on all axis
+        scaleArray[2] = this.value;
+        scaleArray[1] = this.value;
+        scaleArray[0] = this.value;
+        requestAnimFrame(render);
+    };
+
+
+
     // rotate tetrahedron using mouse movement
     var pressedMouse = false;
     canvas.style.cursor="move";
@@ -154,9 +166,12 @@ var render = function(){
     modelviewmatrix = mult(modelviewmatrix,rotate(rotationArray[1],0,1,0))
     modelviewmatrix = mult(modelviewmatrix,rotate(rotationArray[0],1,0,0))
 
-    modelviewmatrix = mult(modelviewmatrix,scalem(scaleArray[0],scaleArray[1],1))
+    modelviewmatrix = mult(modelviewmatrix,scalem(scaleArray))
     
-    gl.uniform4fv(translation,translationArray)
+
+    modelviewmatrix = mult(modelviewmatrix,transpose(translate(translationArray)))
+  
+   
     gl.uniformMatrix4fv( mvLoc, false, flatten(modelviewmatrix) );
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.drawArrays( gl.TRIANGLES, 0, points.length );

@@ -6,10 +6,10 @@
 	attribute vec3 vColor;
 	varying vec4 fcolor;
 	uniform mat4 modelviewmatrix;
-	uniform vec4 translation;
+	
 	void main()
 	{
-		gl_Position = (vPosition * modelviewmatrix) + translation;
+		gl_Position = (vPosition * modelviewmatrix);
 		fcolor = vec4(vColor, 1.0);
 	}
 </script>
@@ -48,12 +48,12 @@ Ismail TOSUN / 180316030
 			<div> <strong>Translations</strong> </div>
 			<div>
 			Translate X: -1<input class="slider" id="posX" type="range"
-			 min="-1" max="1" step="0.1" value="0" />1
+			 min="-1" max="1" step="0.01" value="0" />1
 			</div> 
 			
 			<div>
 			Translate Y: -1<input class="slider" id="posY" type="range"
-			 min="-1" max="1" step="0.1" value="0" />1
+			 min="-1" max="1" step="0.01" value="0" />1
 			</div>		
 			<br>
 			
@@ -76,20 +76,27 @@ Ismail TOSUN / 180316030
 			<div> <strong>Scaling</strong> </div>
 			<div>
 			Scale X: -2<input class="slider" id="scaleX" type="range"
-			 min="-2" max="2" step="0.1" value="0" />2
+			 min="-2" max="2" step="0.01" value="0" />2
 			</div> 
 			
 			<div>
 			Scale Y: -2<input class="slider" id="scaleY" type="range"
-			 min="-2" max="2" step="0.1" value="0" />2
+			 min="-2" max="2" step="0.01" value="0" />2
 			</div>
+
+			<div>
+				Scale All: 0.1<input class="slider" id="scaleAll" type="range"
+				 min="0.1" max="2" step="0.01" value="0.8" />2
+				</div>
 						
 			<br>
 			
 			<div>
 			<button id = "ResetButton">Reset</button>
 			<p><h4>Additional feature</h4>
-				<h5>You can rotate The tetrahedron by clicking and dragging on canvas </h5>
+				
+				<h5>Rotate The tetrahedron by clicking and dragging on canvas </h5>
+				<h5>Resize tetrahedron with Scale All slider</h5>
 			</p>
 		</td>
 	</tr>
